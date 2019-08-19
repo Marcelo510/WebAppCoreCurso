@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<!-- Stream video via webcam -->
+<div class="video-wrap">
+    <video id="video" playsinline autoplay></video>
+</div>
+
+<!-- Trigger canvas web API -->
+<div class="controller">
+    <button id="snap">Capture</button>
+</div>
+
+<!-- Webcam video snapshot -->
+<canvas id="canvas" width="640" height="480"></canvas>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>
+<script>
+    'use strict';
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snap = document.getElementById("snap");
+    const errorMsgElement = document.querySelector('span#errorMsg');
+
+    const constraints = {
+        audio: true,
+        video: {
+            width: 1280, height: 720
+        }
+    };
+
+    // Access webcam
+    async function init() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            handleSuccess(stream);
+        } catch (e) {
+            errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+        }
+    }
+
+    // Success
+    function handleSuccess(stream) {
+        window.stream = stream;
+        video.srcObject = stream;
+    }
+
+    // Load init
+    init();
+
+    // Draw image
+    var context = canvas.getContext('2d');
+    snap.addEventListener("click", function () {
+        context.drawImage(video, 0, 0, 640, 480);
+    });
+</script>
